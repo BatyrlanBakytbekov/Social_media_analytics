@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 800px;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"group": 0, "id": "Australia", "label": "Australia", "shape": "dot"}, {"group": 1, "id": "Austria", "label": "Austria", "shape": "dot"}, {"group": 1, "id": "Belgium", "label": "Belgium", "shape": "dot"}, {"group": 3, "id": "Canada", "label": "Canada", "shape": "dot"}, {"group": 1, "id": "Chile", "label": "Chile", "shape": "dot"}, {"group": 1, "id": "Costa Rica", "label": "Costa Rica", "shape": "dot"}, {"group": 1, "id": "Czech\u00a0Republic", "label": "Czech\u00a0Republic", "shape": "dot"}, {"group": 4, "id": "Denmark", "label": "Denmark", "shape": "dot"}, {"group": 5, "id": "Estonia", "label": "Estonia", "shape": "dot"}, {"group": 1, "id": "Finland", "label": "Finland", "shape": "dot"}, {"group": 6, "id": "France", "label": "France", "shape": "dot"}, {"group": 7, "id": "Germany", "label": "Germany", "shape": "dot"}, {"group": 8, "id": "Greece", "label": "Greece", "shape": "dot"}, {"group": 9, "id": "Hungary", "label": "Hungary", "shape": "dot"}, {"group": 5, "id": "Iceland", "label": "Iceland", "shape": "dot"}, {"group": 10, "id": "Ireland", "label": "Ireland", "shape": "dot"}, {"group": 11, "id": "Italy", "label": "Italy", "shape": "dot"}, {"group": 5, "id": "Japan", "label": "Japan", "shape": "dot"}, {"group": 9, "id": "Korea", "label": "Korea", "shape": "dot"}, {"group": 5, "id": "Latvia", "label": "Latvia", "shape": "dot"}, {"group": 5, "id": "Lithuania", "label": "Lithuania", "shape": "dot"}, {"group": 1, "id": "Luxembourg", "label": "Luxembourg", "shape": "dot"}, {"group": 5, "id": "Mexico", "label": "Mexico", "shape": "dot"}, {"group": 12, "id": "Netherlands", "label": "Netherlands", "shape": "dot"}, {"group": 8, "id": "New Zealand", "label": "New Zealand", "shape": "dot"}, {"group": 13, "id": "Norway", "label": "Norway", "shape": "dot"}, {"group": 14, "id": "Poland", "label": "Poland", "shape": "dot"}, {"group": 15, "id": "Portugal", "label": "Portugal", "shape": "dot"}, {"group": 5, "id": "Slovak\u00a0Republic", "label": "Slovak\u00a0Republic", "shape": "dot"}, {"group": 5, "id": "Slovenia", "label": "Slovenia", "shape": "dot"}, {"group": 16, "id": "Spain", "label": "Spain", "shape": "dot"}, {"group": 17, "id": "Sweden", "label": "Sweden", "shape": "dot"}, {"group": 18, "id": "Switzerland", "label": "Switzerland", "shape": "dot"}, {"group": 9, "id": "T\u00fcrkiye", "label": "T\u00fcrkiye", "shape": "dot"}, {"group": 2, "id": "United Kingdom", "label": "United Kingdom", "shape": "dot"}, {"group": 1, "id": "United States", "label": "United States", "shape": "dot"}]);
+                  edges = new vis.DataSet([{"from": "Austria", "to": "Chile", "value": 0.8295942322666275}, {"from": "Austria", "to": "Czech\u00a0Republic", "value": 0.837030430837526}, {"from": "Austria", "to": "United States", "value": 0.8437450879902753}, {"from": "Belgium", "to": "Costa Rica", "value": 0.8206618716488033}, {"from": "Belgium", "to": "United States", "value": 0.9282161460370127}, {"from": "Chile", "to": "Costa Rica", "value": 0.9177769606530668}, {"from": "Chile", "to": "Czech\u00a0Republic", "value": 0.9043429144642112}, {"from": "Chile", "to": "Estonia", "value": 0.9411088915573687}, {"from": "Chile", "to": "Finland", "value": 0.8180885580339027}, {"from": "Chile", "to": "Iceland", "value": 0.9629961872998232}, {"from": "Chile", "to": "Japan", "value": 0.8778545658679754}, {"from": "Chile", "to": "Latvia", "value": 0.8710997353297877}, {"from": "Chile", "to": "Lithuania", "value": 0.9568789780521102}, {"from": "Chile", "to": "Mexico", "value": 0.8995677686319405}, {"from": "Chile", "to": "Slovak\u00a0Republic", "value": 0.9633562976575051}, {"from": "Chile", "to": "Slovenia", "value": 0.9565026087628409}, {"from": "Chile", "to": "United States", "value": 0.895655502995585}, {"from": "Costa Rica", "to": "Czech\u00a0Republic", "value": 0.8905754343961061}, {"from": "Costa Rica", "to": "Estonia", "value": 0.9082717874138245}, {"from": "Costa Rica", "to": "Finland", "value": 0.8837009854683427}, {"from": "Costa Rica", "to": "Iceland", "value": 0.9324328813445898}, {"from": "Costa Rica", "to": "Japan", "value": 0.8768039387001425}, {"from": "Costa Rica", "to": "Latvia", "value": 0.8304072143061361}, {"from": "Costa Rica", "to": "Lithuania", "value": 0.9328613703850356}, {"from": "Costa Rica", "to": "Luxembourg", "value": 0.8363031856883685}, {"from": "Costa Rica", "to": "Mexico", "value": 0.9057866574644782}, {"from": "Costa Rica", "to": "Slovak\u00a0Republic", "value": 0.9518695068495598}, {"from": "Costa Rica", "to": "Slovenia", "value": 0.9450148800215976}, {"from": "Costa Rica", "to": "United States", "value": 0.9094341859630016}, {"from": "Czech\u00a0Republic", "to": "Finland", "value": 0.8363264137456925}, {"from": "Czech\u00a0Republic", "to": "Iceland", "value": 0.8438233134546005}, {"from": "Czech\u00a0Republic", "to": "Lithuania", "value": 0.8224244250986598}, {"from": "Czech\u00a0Republic", "to": "Slovak\u00a0Republic", "value": 0.8518673956372658}, {"from": "Czech\u00a0Republic", "to": "Slovenia", "value": 0.8248989516434522}, {"from": "Czech\u00a0Republic", "to": "United States", "value": 0.8417724659629386}, {"from": "Estonia", "to": "Iceland", "value": 0.9885750669977172}, {"from": "Estonia", "to": "Japan", "value": 0.9092054716585525}, {"from": "Estonia", "to": "Latvia", "value": 0.9728660759302198}, {"from": "Estonia", "to": "Lithuania", "value": 0.9917550255083369}, {"from": "Estonia", "to": "Mexico", "value": 0.9648069500479856}, {"from": "Estonia", "to": "Slovak\u00a0Republic", "value": 0.9829890422355005}, {"from": "Estonia", "to": "Slovenia", "value": 0.9800046983429656}, {"from": "Estonia", "to": "United States", "value": 0.8045694769216947}, {"from": "Finland", "to": "Mexico", "value": 0.8416688731883216}, {"from": "Finland", "to": "New Zealand", "value": 0.8067042432686916}, {"from": "Finland", "to": "Slovak\u00a0Republic", "value": 0.8110326391415774}, {"from": "Greece", "to": "New Zealand", "value": 0.8109397795601877}, {"from": "Hungary", "to": "T\u00fcrkiye", "value": 0.8350083044576929}, {"from": "Iceland", "to": "Japan", "value": 0.8873723588978625}, {"from": "Iceland", "to": "Latvia", "value": 0.9431148825100044}, {"from": "Iceland", "to": "Lithuania", "value": 0.9982687166043256}, {"from": "Iceland", "to": "Mexico", "value": 0.9545728893296602}, {"from": "Iceland", "to": "Slovak\u00a0Republic", "value": 0.9967640728633897}, {"from": "Iceland", "to": "Slovenia", "value": 0.991475228867658}, {"from": "Iceland", "to": "United States", "value": 0.8382980374785307}, {"from": "Japan", "to": "Latvia", "value": 0.9155776799812347}, {"from": "Japan", "to": "Lithuania", "value": 0.9008153884145467}, {"from": "Japan", "to": "Mexico", "value": 0.9026727551044881}, {"from": "Japan", "to": "Slovak\u00a0Republic", "value": 0.8929191611752619}, {"from": "Japan", "to": "Slovenia", "value": 0.9009742149190217}, {"from": "Japan", "to": "T\u00fcrkiye", "value": 0.8103812837755024}, {"from": "Korea", "to": "T\u00fcrkiye", "value": 0.9011190333415976}, {"from": "Latvia", "to": "Lithuania", "value": 0.9499608760155874}, {"from": "Latvia", "to": "Mexico", "value": 0.9527062810417621}, {"from": "Latvia", "to": "Slovak\u00a0Republic", "value": 0.9290691248327414}, {"from": "Latvia", "to": "Slovenia", "value": 0.9280197415493092}, {"from": "Lithuania", "to": "Mexico", "value": 0.9559854599140278}, {"from": "Lithuania", "to": "Slovak\u00a0Republic", "value": 0.9974518291705786}, {"from": "Lithuania", "to": "Slovenia", "value": 0.99570965755549}, {"from": "Lithuania", "to": "United States", "value": 0.8352298644706238}, {"from": "Mexico", "to": "Slovak\u00a0Republic", "value": 0.9497094235062207}, {"from": "Mexico", "to": "Slovenia", "value": 0.9393993172218782}, {"from": "Slovak\u00a0Republic", "to": "Slovenia", "value": 0.9972531225031556}, {"from": "Slovak\u00a0Republic", "to": "United States", "value": 0.8598836792400946}, {"from": "Slovenia", "to": "United States", "value": 0.8604538678230735}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
